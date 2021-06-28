@@ -1,0 +1,86 @@
+
+
+  <div class="jumbotron">
+    <h1> Stock Holdings for <%= user.googlename %> </h1>
+     <div id="stocks">
+      <% stocks.forEach(stock => { %>
+          <div id="<%= stock._id %>">
+           <a onclick="remove('<%=stock._id %>')">X</a>
+           ::
+           <%= stock.itemId %>
+          </div>
+
+      <% }) %>
+    </div>
+
+    <!-- Here is where we get the new todo item -->
+    <form method="post" action="stock">
+        Stock Index: <input type="text" name="stockIndex"><br>
+        Date of Action: <input type="date" name="time"><br>
+        Type of Action: <br>
+        Buy <input type="radio" name="actionType" value="buy"<br>
+        Sell <input type="radio" name="actionType" value="sell"<br><br>
+        Share: <input type="number" name="share"><br>
+        <input type="submit" value="store">
+    </form>
+  </div>
+
+  <script>
+
+    /*
+      Here is the code to maintain the todolist entirely locally
+    */
+      storeData =
+       async () => {
+         try{
+              let newStock = document.getElementById('itemId').value
+              let data = await postData('/stockAjax', { itemId: newStock})
+              let theList = document.getElementById('stocks')
+              document.getElementById('itemId').value=""
+              theList.innerHTML = theList.innerHTML+
+               `<div id="${data._id}">
+                <a onclick="remove('${data._id}')">X</a>
+                ::
+                ${newStock}
+               </div>`
+          } catch (e){
+          alert("error! "+e)
+        }
+      }
+
+      remove =
+        async (x) => {
+          try{
+            let oldStock = document.getElementById(x)
+            let data = await postData(`/stockAjax/remove`,{itemId:x})
+            console.log(JSON.stringify(data,null,2))
+            oldStock.parentNode.removeChild(oldStock);
+          } catch(e) {
+            alert(`error3: ${e}`)
+          }
+   }
+
+   /*
+     postData will run a postRequest and return the result
+   */
+  async function postData(url = '', data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data) // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+
+
+  </script>
