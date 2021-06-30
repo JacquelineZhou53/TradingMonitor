@@ -1,0 +1,30 @@
+
+
+  <div class="jumbotron">
+        <h1> Stock Earnings for <%= user.googlename %> The Gopnik </h1>
+
+  </div>
+
+<div class="row">
+  <div class="col">
+    <script>
+     var totalEarning = 0;
+     var indexList = [];
+       stocks.forEach(stock => {
+          var flag = false;
+          if (indexList.length == 0){
+            indexList.push(stock.stockIndex)
+          } else{
+            for (let i = 0; i < indexList.length; i++){
+              if (indexList[i] == stock.indexList){
+                flag = true;
+                break;
+              }
+            } if (flag == false){
+              indexList.push(stock.stockIndex)
+            }
+          }
+        }) 
+       </script>
+    </div>
+</div>

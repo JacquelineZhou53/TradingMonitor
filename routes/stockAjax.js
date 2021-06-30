@@ -44,7 +44,9 @@ router.post('/',
          time: req.body.time,
          share:req.body.share,
          actionType:req.body.actionType,
-         price:req.body.price,
+         sellPrice:req.body.sellPrice,
+         buyPrice:req.body.buyPrice,
+         aveCost:req.body.aveCost,
          itemId: req.user._id,
         })
       let newStock = await stock.save();

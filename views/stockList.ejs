@@ -1,25 +1,37 @@
 
 
   <div class="jumbotron">
-    <h1> Stock Holding List for <%= user.googlename %> </h1>
+        <h1> Stock Holding List for <%= user.googlename %> </h1>
 
-      <form method="post" action="stock">
-          Stock Index: <input type="text" name="stockIndex"><br>
-          Date of Action: <input type="date" name="time"><br>
-          Type of Action: <br>
-          Buy <input type="radio" name="actionType" value="1"<br>
-          Sell <input type="radio" name="actionType" value="-1"<br><br>
-          Share: <input type="number" name="share"><br>
-          <input type="submit" value="store">
-      </form>
+          <form method="post" action="stock">
+              Stock Index: <input type="text" name="stockIndex"><br>
+              Date of Action: <input type="date" name="time"><br>
+              Type of Action: <br>
+              Buy <input type="radio" name="actionType" value="1"<br>
+              Sell <input type="radio" name="actionType" value="-1"<br><br>
+              Price: <input type="text" name="price"><br>
+              Share: <input type="number" name="share"><br>
+              <input type="submit" value="store">
+          </form>
+  </div>
 
-      <% stocks.forEach(stock => {%>
-           <a href="/stock/remove/<%=stock._id %>">
-               X
-           </a>
-           ::
-           <%= stock.stockIndex %> <%= stock.share %>
-          <br>
-      <% }) %>
+  <div class="container">
+    <h4> Current totalEarning is: $<%=totalEarning%> </h4>
+  </div>
 
+  <div class="container">
+    <div class="center">
+        <% stocks.forEach(stock => {%>
+             <a href="/stock/remove/<%=stock._id %>">
+                 X
+             </a>
+             ::
+             Index: <%= stock.stockIndex %>     Shares: <%= stock.share %>    Date: <%= stock.time %><br>
+             Type of Action: <% if (stock.actionType == 1){%>   Bought at $<% stock.price %> per share
+             <%} else {%>
+               Sold at $<% stock.price %> per share
+             <%}%>
+            <br>
+        <% }) %>
+      </div>
   </div>

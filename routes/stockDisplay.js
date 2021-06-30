@@ -13,6 +13,7 @@ const download = require("download");
 const alpha = require('alphavantage')({  key: '3GNM04I3VG4LFS8O'});
 
 const StockShare = require('../models/StockShare');
+const StockShare = require('../models/StockProps');
 
 /*
 this is a very simple server which maintains a key/value
@@ -33,7 +34,8 @@ router.get('/',
   isLoggedIn,
   async (req, res, next) => {
       res.locals.stocks = await StockShare.find({itemId:req.user._id})
-      res.render('stockList');
+      res.locals.stocks = await StockProps.find({itemId:req.user._id})
+      res.render('stockEarnings');
 });
 
 /* add the value in the body to the list associated to the key */
@@ -81,26 +83,13 @@ router.post('/',
           await alpha.data.daily(String(index)).then(data => {
             const dailyData = data;
           });
-          const thisIndex = req.body.stockIndex;
-          const thisAction = parseInt(req.body.actionType);
-          const thisShare = parseInt(req.body.share);
-          const thisPrice = parseFloat(req.body.price);
-          const stock = new StockShare(
-            {stockIndex:thisIndex,
-              time: req.body.time,
-              share:thisShare,
-              actionType:thisAction,
-              price:thisPrice,
-              itemId: req.user._id,
-              cost:thisAction*thisShare*thisPrice
-            })
           await stock.save();
         } catch(error){
           console.log("Had an error")
           next(error)
         }
       //res.render("todoVerification")
-      res.redirect('/stock')
+      res.redirect('/stockDisplay')
 });
 
 router.get('/remove/:itemId',
@@ -108,7 +97,7 @@ router.get('/remove/:itemId',
   async (req, res, next) => {
       console.log("inside /stock/remove/:itemId")
       await StockShare.remove({_id:req.params.itemId});
-      res.redirect('/stock')
+      res.redirect('/stockDisplay')
 });
 
 
