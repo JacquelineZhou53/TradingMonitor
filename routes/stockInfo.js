@@ -31,7 +31,9 @@ router.get('/',
   async (req, res, next) => {
     //stocks: list of buy/sell operations
       res.locals.stocks = await StockShare.find({itemId:req.user._id})
-      res.render('stockList');
+    //stockUni: list of individual stock indexes
+      res.locals.stockps = await StockProps.find({itemId:req.user._id})
+      res.render('stockInfoPage');
 });
 
 router.post('/',
@@ -39,36 +41,31 @@ router.post('/',
   async (req, res, next) => {
         try{
           console.log("inside try")
-          const index = req.body.stockIndex;
-          //const url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol="+index+"&interval=15min&slice=year1month1&apikey=3GNM04I3VG4LFS8O";
-          const thisIndex = req.body.stockIndex;
-          const thisAction = parseInt(req.body.actionType);
-          const thisShare = parseInt(req.body.share);
-          const thisPrice = parseFloat(req.body.price);
-          const stock = new StockShare({
-              stockIndex:thisIndex,
-              time: req.body.time,
-              share:thisShare,
-              actionType:thisAction,
-              price:thisPrice,
-              itemId: req.user._id,
-              cost:thisAction*thisShare*thisPrice
+          const index = req.body.index;
+          alpha.data.intraday(String(index)).then(infor => {
+            //console.log(JSON.stringify(data['Time Series (1min)']))
+            const data = infor;
+            const time = data['Meta Data']['3. Last Refreshed']
+            const new_info = data['Time Series (1min)'][time]
+            console.log(JSON.stringify(new_info))
+            const stockprop = new StockProps({
+              propIndex:index,
+              time_param:String(time),
+              open:parseFloat(new_info['1. open']),
+              high:parseFloat(new_info['2. high']),
+              low:parseFloat(new_info['3. low']),
+              close:parseFloat(new_info['4. close']),
+              volume:parseInt(new_info['5. volume']),
+              itemId:req.user._id,
             })
-          await stock.save();
+            stockprop.save();
+          });
          }catch(error){
           console.log("Had an error")
           next(error)
         }
       //res.render("todoVerification")
-      res.redirect('/stock')
-});
-
-router.get('/remove/:itemId',
-  isLoggedIn,
-  async (req, res, next) => {
-      console.log("inside /stock/remove/:itemId")
-      await StockShare.remove({_id:req.params.itemId});
-      res.redirect('/stock')
+      res.redirect('stockInfo')
 });
 
 

@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const layouts = require("express-ejs-layouts");
+const jsonToTable = require('json-to-table');
+const alpha = require('alphavantage')({  key: '3GNM04I3VG4LFS8O'});
 //const auth = require('./config/auth.js');
 
 
@@ -30,7 +32,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const stockRouter = require('./routes/stock');
-const stockAjaxRouter = require('./routes/stockAjax');
+const stockInfoRouter = require('./routes/stockInfo');
 
 
 
@@ -56,7 +58,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 app.use('/stock',stockRouter);
-app.use('/stockAjax',stockAjaxRouter);
+app.use('/stockInfo',stockInfoRouter);
 
 const myLogger = (req,res,next) => {
   console.log('inside a route!')
@@ -72,63 +74,15 @@ app.get('/testing',
 app.get('/testing2',(req,res) => {
   res.render('testing2')
 })
-
-app.get('/profiles',
-    isLoggedIn,
-    async (req,res,next) => {
-      try {
-        res.locals.profiles = await User.find({})
-        res.render('profiles')
-      }
-      catch(e){
-        next(e)
-      }
-    }
-  )
-
-app.use('/publicprofile/:userId',
-    async (req,res,next) => {
-      try {
-        let userId = req.params.userId
-        res.locals.profile = await User.findOne({_id:userId})
-        res.render('publicprofile')
-      }
-      catch(e){
-        console.log("Error in /profile/userId:")
-        next(e)
-      }
-    }
-)
-
-
-app.get('/profile',
-    isLoggedIn,
-    (req,res) => {
-      res.render('profile')
-    })
-
-app.get('/editProfile',
-    isLoggedIn,
-    (req,res) => res.render('editProfile'))
-
-app.post('/editProfile',
-    isLoggedIn,
-    async (req,res,next) => {
-      try {
-        let username = req.body.username
-        let age = req.body.age
-        req.user.username = username
-        req.user.age = age
-        req.user.imageURL = req.body.imageURL
-        await req.user.save()
-        res.redirect('/profile')
-      } catch (error) {
-        next(error)
-      }
-
-    })
-
-
+/*
+app.post('/stockInfoPage', (req, res) => {
+        alpha.data.intraday(String(req.body.reqIndex)).then(data => {
+          console.log(JSON.stringify(data))
+          res.locals.data = data;
+        });
+        res.render('showStockInfo')
+})
+*/
 app.use('/data',(req,res) => {
   res.json([{a:1,b:2},{a:5,b:3}]);
 })
@@ -146,6 +100,7 @@ app.get("/test",async (req,res,next) => {
 app.get("/apikey", async (req,res,next) => {
   res.render('apikey')
 })
+
 
 const APIKey = require('./models/APIKey')
 

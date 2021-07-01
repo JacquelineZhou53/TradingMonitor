@@ -6,10 +6,13 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 var stockPropsSchema = Schema( {
    propIndex: String,
-   share: Number,
-   price: Number,
+   time_param: String,
+   open: Number,
+   high: Number,
+   low: Number,
+   close: Number,
+   volume: Number,
    itemId: ObjectId,
-   cost: Number,
 } );
 
 module.exports = mongoose.model( 'StockProps', stockPropsSchema );

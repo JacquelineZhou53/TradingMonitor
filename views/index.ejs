@@ -1,3 +1,6 @@
+<%- include('bootheader') -%>
+
+<%- include('menubar') -%>
 
 
   <div class="jumbotron">
@@ -8,8 +11,10 @@
       <% if (loggedIn) {%>
       <li></li>
       <li><a href="/stock">Buy/Sell Stock as a proper Gopnik! </a></li>
+      <li><a href="/stockInfo">See table for selected stock </a></li>
       <% } %>
     </ul>
   </div>
+<%- include('bootfooter') -%>
 
   <!-- Hello World! -->

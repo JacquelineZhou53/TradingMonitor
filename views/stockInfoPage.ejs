@@ -1,0 +1,48 @@
+<%- include('bootheader') -%>
+
+<%- include('menubar') -%>
+<!--
+  <div class="jumbotron">
+        <h1> See the info for selected stock </h1>
+        <form method="post" action="/stockInfo">
+            Index of Stock: <input type="text" name="reqIndex"><br>
+            <input type="submit" value="See Table">
+        </form>
+  </div>
+-->
+<div class="jumbotron">
+  <form method="post" action="/stockInfo">
+    Index: <input type="text" name="index"><br>
+    <input type="submit">
+  </form>
+
+  <h3>List of newest information from selected stocks</h3>
+  <table class="table table-bordered table-striped" id="newest_info">
+    <thead>
+        <tr>
+            <th>Index</th>
+            <th>Time</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+            <th>Volume</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% stockps.forEach( stockp => { %>
+        <tr>
+          <td><%= stockp.propIndex %></td>
+          <td><%= stockp.time_param %></td>
+          <td><%= stockp.open %></td>
+          <td><%= stockp.high %></td>
+          <td><%= stockp.low %></td>
+          <td><%= stockp.close %></td>
+          <td><%= stockp.volume %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('bootfooter') -%>

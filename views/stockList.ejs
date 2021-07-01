@@ -1,7 +1,9 @@
+<%- include('bootheader') -%>
 
+<%- include('menubar') -%>
 
   <div class="jumbotron">
-        <h1> Stock Holding List for <%= user.googlename %> </h1>
+        <h1> Buy/Sell Log List for <%= user.googlename %> </h1>
 
           <form method="post" action="stock">
               Stock Index: <input type="text" name="stockIndex"><br>
@@ -15,23 +17,49 @@
           </form>
   </div>
 
-  <div class="container">
-    <h4> Current totalEarning is: $<%=totalEarning%> </h4>
-  </div>
+<h3>List of Operations</h3>
+<table class="table table-bordered table-striped" id="operation_log">
+    <thead>
+        <tr>
+            <th>Index</th>
+            <th>Shares</th>               <!-- column 1 -->
+            <th>Date of Operation</th>
+            <th>Buy/Sell</th>
+            <th>Price</th>
+            <th>Cost of Operation</th>    <!-- column 5 -->
+            <th>Delete this Log</th>
+        </tr>
+    </thead>
 
-  <div class="container">
-    <div class="center">
-        <% stocks.forEach(stock => {%>
-             <a href="/stock/remove/<%=stock._id %>">
-                 X
-             </a>
-             ::
-             Index: <%= stock.stockIndex %>     Shares: <%= stock.share %>    Date: <%= stock.time %><br>
-             Type of Action: <% if (stock.actionType == 1){%>   Bought at $<% stock.price %> per share
-             <%} else {%>
-               Sold at $<% stock.price %> per share
-             <%}%>
-            <br>
+    <tbody>
+        <% stocks.forEach( stock => {%>
+            <tr>
+                <td><%= stock.stockIndex %></td>
+                <td><%= stock.share %></td>
+                <td><%= stock.time %></td>
+                <td><% if (stock.actionType == 1){%>
+                  Buy
+                <%} else {%>
+                  Sell
+                <%}%></td>
+                <td><%= stock.price %></td>
+                <td><%= parseInt(stock.cost) %></td>
+                <td><a href="/stock/remove/<%=stock._id %>">
+                    Delete
+                </a></td>
+            </tr>
         <% }) %>
-      </div>
-  </div>
+    </tbody>
+  </table>
+  <span id="sumValue"></span>
+
+<script>
+  var table = document.getElementById("operation_log"), sumOfCost = 0;
+
+  for (var i = 1; i < table.rows.length; i++){
+    sumOfCost = sumOfCost + parseInt(table.rows[i].cells[5].innerHTML);
+  }
+  document.getElementById("sumValue").innerHTML = "Total Earnings = $" + (-1)*sumOfCost;
+</script>
+
+<%- include('bootfooter') -%>
