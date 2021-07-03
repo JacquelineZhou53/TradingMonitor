@@ -27,6 +27,7 @@
     "mongoose": "^5.12.13",
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.9",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
     "request": "^2.88.2",
@@ -34,7 +35,6 @@
   },
   "description": "",
   "main": "app.js",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JacquelineZhou53/TradingMonitor.git"

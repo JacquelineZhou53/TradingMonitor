@@ -13,7 +13,6 @@ const download = require("download");
 const alpha = require('alphavantage')({  key: '3GNM04I3VG4LFS8O'});
 
 const StockShare = require('../models/StockShare');
-const StockProps = require('../models/StockProps');
 
 
 
@@ -45,14 +44,15 @@ router.post('/',
           const thisAction = parseInt(req.body.actionType);
           const thisShare = parseInt(req.body.share);
           const thisPrice = parseFloat(req.body.price);
+          const thisCompare = null;
           const stock = new StockShare({
               stockIndex:thisIndex,
-              time: req.body.time,
+              time:req.body.time,
               share:thisShare,
               actionType:thisAction,
               price:thisPrice,
               itemId: req.user._id,
-              cost:thisAction*thisShare*thisPrice
+              cost:thisAction*thisShare*thisPrice,
             })
           await stock.save();
          }catch(error){

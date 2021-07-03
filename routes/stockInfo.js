@@ -58,14 +58,24 @@ router.post('/',
               volume:parseInt(new_info['5. volume']),
               itemId:req.user._id,
             })
-            stockprop.save();
+            if (stockprop.open != null){
+              stockprop.save();
+            }
           });
          }catch(error){
           console.log("Had an error")
           next(error)
         }
       //res.render("todoVerification")
-      res.redirect('stockInfo')
+      res.redirect('/stockInfo')
+});
+
+router.get('/remove/:itemId',
+  isLoggedIn,
+  async (req, res, next) => {
+      console.log("inside /stockInfo/remove/:itemId")
+      await StockProps.remove({_id:req.params.itemId});
+      res.redirect('/stockInfo')
 });
 
 

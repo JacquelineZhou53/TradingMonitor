@@ -11,10 +11,11 @@
   </div>
 -->
 <div class="jumbotron">
-  <form method="post" action="/stockInfo">
+  <form method="post" action="stockInfo">
     Index: <input type="text" name="index"><br>
-    <input type="submit">
+    <input type="submit" value="See Table">
   </form>
+
 
   <h3>List of newest information from selected stocks</h3>
   <table class="table table-bordered table-striped" id="newest_info">
@@ -27,6 +28,7 @@
             <th>Low</th>
             <th>Close</th>
             <th>Volume</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +41,9 @@
           <td><%= stockp.low %></td>
           <td><%= stockp.close %></td>
           <td><%= stockp.volume %></td>
+          <td><a href="/stockInfo/remove/<%=stockp._id %>">
+              Delete
+          </a></td>
         </tr>
       <% }) %>
     </tbody>
